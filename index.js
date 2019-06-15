@@ -115,10 +115,20 @@ Worker.prototype.processRequest = function(req) {
     return;
   }
 
+  var body = JSON.parse(req.body);
+  var branchName =
+    body &&
+    body.push &&
+    body.push.changes &&
+    body.push.changes.length &&
+    body.push.changes[0].new &&
+    body.push.changes[0].new.name;
+
   console.log(
-    "[%s] Received valid hook for app %s",
+    "[%s] Received valid hook for app %s branch %s",
     new Date().toISOString(),
-    targetName
+    targetName,
+    branchName
   );
 
   var execOptions = {
