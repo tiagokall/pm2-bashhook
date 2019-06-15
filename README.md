@@ -1,10 +1,10 @@
 ## Description
 
-PM2 module to receive http webhook from github, execute pre/post hook and gracefull reload the application using pm2.
+This is a form from `pm2-githook` and the only difference is it only run the hook scripts, not fetch the repository. 
 
 ## Install
 
-`pm2 install pm2-githook`
+`pm2 install pm2-bashhook`
 
 ## Configure
 
@@ -23,7 +23,7 @@ PM2 module to receive http webhook from github, execute pre/post hook and gracef
     ```
     
     - `APP_NAME` is the name of the api **in pm2** and in the **url** defined on github or gitlab (eg: : `http://127.0.0.1:8888/APP_NAME`).
-    - `secret` is the secret you put in github/gitlab to verify that the transaction is made by github/gitlab.
+    - `secret` is the secret you put in github/gitlab to verify that the transaction is made by github/gitlab. If you're using bitbucket you must enter bitbucket IP here
     - `prehook` is the shell command executed in the `cwd` **(care of this)** of the app after the `pull` and before the `gracefullReload`.
     - `posthook` is the shell command executed in the `cwd` **(care of this)** of the app after making the `gracefullReload`.
     - `service` is the service used to make the http call (`github` is the default)
