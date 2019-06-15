@@ -144,7 +144,7 @@ Worker.prototype.processRequest = function(req) {
         console.log(
           "[%s] Resolved cwd %s",
           new Date().toISOString(),
-          targetApp.cwd
+          execOptions.cwd
         );
         return cb();
       });
@@ -443,7 +443,7 @@ function reqToAppName(req) {
  */
 function spawnAsExec(command, options, cb) {
   var child = spawn("eval", [command], options);
-  console.log("Spawn command" + command);
+  console.log("Spawn command " + command + " with cwd " + options.cwd);
   child.on("error", function(error) {
     console.error("CUST ERROR" + error);
   });
