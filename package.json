@@ -1,5 +1,5 @@
 {
-  "name": "pm2-githook",
+  "name": "pm2-bashhook",
   "version": "1.9.1",
   "description": "receive http hook from multiple source and ask pm2 to reload the application for you",
   "main": "index.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/vmarchaud/pm2-githook.git"
+    "url": "git+https://github.com/tiagokall/pm2-bashhook.git"
   },
   "keywords": [
     "pm2",
@@ -25,18 +25,13 @@
     "jenkins",
     "bitbucket"
   ],
-  "author": "vmarchaud",
+  "author": "tiagokall",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/vmarchaud/pm2-githook/issues"
-  },
-  "homepage": "https://github.com/vmarchaud/pm2-githook#readme",
   "dependencies": {
     "async": "^2.1.1",
     "ipaddr.js": "^1.2.0",
     "pm2": "^2.0.18",
-    "pmx": "^0.6.8",
-    "vizion": "^0.2.13"
+    "pmx": "^0.6.8"
   },
   "config": {
     "apps": {
