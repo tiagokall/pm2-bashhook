@@ -1,6 +1,6 @@
 ## Description
 
-This is a form from `pm2-githook` and the only difference is it only run the hook scripts, not fetch the repository. 
+This is a fork from `pm2-githook` and the only difference is it only run the hook scripts, not fetch the repository. 
 
 ## Install
 
