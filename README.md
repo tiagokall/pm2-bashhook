@@ -40,14 +40,14 @@ This is a fork from `pm2-githook` and the only difference is it only run the hoo
 #### How to set these values ?
 
  After having installed the module you have to type :
-`pm2 set pm2-githook:key value`
+`pm2 set pm2-bashhook:key value`
 
 To set the `apps` option and since its a json string, i advice you to escape it to be sure that the string is correctly set ([using this kind of tool](http://bernhardhaeussner.de/odd/json-escape/)).
 
 e.g: 
-- `pm2 set pm2-githook:port 8080` (bind the http server port to 8080)
-- `pm2 set pm2-githook:apps "{\"APP_NAME\":{\"secret\":\"supersecret\",\"prehook\":\"npm install --production && git submodule update --init\",\"posthook\":\"echo done\"}}"` 
+- `pm2 set pm2-bashhook:port 8080` (bind the http server port to 8080)
+- `pm2 set pm2-bashhook:apps "{\"APP_NAME\":{\"secret\":\"supersecret\",\"prehook\":\"npm install --production && git submodule update --init\",\"posthook\":\"echo done\"}}"` 
 
 ## Uninstall
 
-`pm2 uninstall pm2-githook
+`pm2 uninstall pm2-bashhook
