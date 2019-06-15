@@ -127,14 +127,12 @@ Worker.prototype.processRequest = function(req) {
   var targetBranch = targetApp.targetBranch || "master";
 
   console.log(
-    "[%s] Received valid hook for app %s (branch %s, allowed %s)",
+    "[%s] Received valid hook for branch %s app %s ",
     new Date().toISOString(),
     targetName,
-    branchName,
-    targetBranch
+    targetBranch,
+    branchName
   );
-
-  console.log("SHOULD DO IT", branchName === targetBranch);
 
   var execOptions = {
     cwd: targetApp.cwd,
@@ -207,13 +205,13 @@ Worker.prototype.processRequest = function(req) {
   } else {
     var phases = {
       skitIp: function skipIt(cb) {
-        logCallback(
-          cb,
-          "[%s] Posthook command skipped for branch %s of app %s",
+        console.log(
+          "[%s] Hooks skipped for branch %s of app %s",
           new Date().toISOString(),
           branchName,
           targetName
         );
+        cb();
       }
     };
   }
