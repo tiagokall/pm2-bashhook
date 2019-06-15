@@ -443,8 +443,9 @@ function reqToAppName(req) {
  */
 function spawnAsExec(command, options, cb) {
   var child = spawn("eval", [command], options);
-  child.on("close", cb);
+  console.log("Spawn command" + command);
   child.on("error", function(error) {
     console.error("CUST ERROR" + error);
   });
+  child.on("close", cb);
 }
