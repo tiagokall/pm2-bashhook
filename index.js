@@ -124,6 +124,8 @@ Worker.prototype.processRequest = function(req) {
     body.push.changes[0].new &&
     body.push.changes[0].new.name;
 
+  var targetBranch = targetApp.targetBranch || "master";
+
   console.log(
     "[%s] Received valid hook for app %s branch %s",
     new Date().toISOString(),
@@ -136,67 +138,83 @@ Worker.prototype.processRequest = function(req) {
     env: process.env,
     shell: true
   };
-  var phases = {
-    resolveCWD: function resolveCWD(cb) {
-      // if cwd is provided, we expect that it isnt a pm2 app
-      if (targetApp.cwd) return cb();
+  // Only build the selected branch
+  if (branchName === targetBranch) {
+    var phases = {
+      resolveCWD: function resolveCWD(cb) {
+        // if cwd is provided, we expect that it isnt a pm2 app
+        if (targetApp.cwd) return cb();
 
-      // try to get the cwd to execute it correctly
-      pm2.describe(targetName, function(err, apps) {
-        if (err || !apps || apps.length === 0)
-          return cb(err || new Error("Application not found"));
+        // try to get the cwd to execute it correctly
+        pm2.describe(targetName, function(err, apps) {
+          if (err || !apps || apps.length === 0)
+            return cb(err || new Error("Application not found"));
+
+          // execute the actual command in the cwd of the application
+          targetApp.cwd = apps[0].pm_cwd
+            ? apps[0].pm_cwd
+            : apps[0].pm2_env.pm_cwd;
+          execOptions.cwd = targetApp.cwd;
+          return cb();
+        });
+      },
+      preHook: function preHook(cb) {
+        if (!targetApp.prehook) return cb();
+        console.log("[%s] Before preHook", new Date().toISOString());
+        spawnAsExec(
+          targetApp.prehook,
+          execOptions,
+          logCallback(
+            cb,
+            "[%s] Prehook command has been successfuly executed for app %s",
+            new Date().toISOString(),
+            targetName
+          )
+        );
+      },
+      reloadApplication: function reloadApplication(cb) {
+        if (targetApp.nopm2) return cb();
+
+        pm2.gracefulReload(
+          targetName,
+          logCallback(
+            cb,
+            "[%s] Successfuly reloaded application %s",
+            new Date().toISOString(),
+            targetName
+          )
+        );
+      },
+      postHook: function postHook(cb) {
+        if (!targetApp.posthook) return cb();
 
         // execute the actual command in the cwd of the application
-        targetApp.cwd = apps[0].pm_cwd
-          ? apps[0].pm_cwd
-          : apps[0].pm2_env.pm_cwd;
-        execOptions.cwd = targetApp.cwd;
-        return cb();
-      });
-    },
-    preHook: function preHook(cb) {
-      if (!targetApp.prehook) return cb();
-      console.log("[%s] Before preHook", new Date().toISOString());
-      spawnAsExec(
-        targetApp.prehook,
-        execOptions,
+        spawnAsExec(
+          targetApp.posthook,
+          execOptions,
+          logCallback(
+            cb,
+            "[%s] Posthook command has been successfuly executed for app %s",
+            new Date().toISOString(),
+            targetName
+          )
+        );
+      }
+    };
+  } else {
+    var phases = {
+      skitIp: function skipIt(cb) {
         logCallback(
           cb,
-          "[%s] Prehook command has been successfuly executed for app %s",
+          "[%s] Posthook command skipped for branch %s of app %s",
           new Date().toISOString(),
+          branchName,
           targetName
-        )
-      );
-    },
-    reloadApplication: function reloadApplication(cb) {
-      if (targetApp.nopm2) return cb();
+        );
+      }
+    };
+  }
 
-      pm2.gracefulReload(
-        targetName,
-        logCallback(
-          cb,
-          "[%s] Successfuly reloaded application %s",
-          new Date().toISOString(),
-          targetName
-        )
-      );
-    },
-    postHook: function postHook(cb) {
-      if (!targetApp.posthook) return cb();
-
-      // execute the actual command in the cwd of the application
-      spawnAsExec(
-        targetApp.posthook,
-        execOptions,
-        logCallback(
-          cb,
-          "[%s] Posthook command has been successfuly executed for app %s",
-          new Date().toISOString(),
-          targetName
-        )
-      );
-    }
-  };
   async.series(
     Object.keys(phases).map(function(k) {
       return phases[k];
