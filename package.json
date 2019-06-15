@@ -25,7 +25,7 @@
     "jenkins",
     "bitbucket"
   ],
-  "author": "tiagokall",
+  "author": "vmarchaud",
   "license": "MIT",
   "dependencies": {
     "async": "^2.1.1",
