@@ -11,7 +11,6 @@ var pm2 = require('pm2');
 var util = require('util');
 var spawn = require('child_process').spawn;
 var async = require('async');
-var vizion = require('vizion');
 var ipaddr = require('ipaddr.js');
 
 /**
@@ -130,11 +129,6 @@ Worker.prototype.processRequest = function (req) {
         return cb();
       });
     },
-    pullTheApplication: function pullTheApplication(cb) {
-      vizion.update({
-        folder: targetApp.cwd
-      }, logCallback(cb, '[%s] Successfuly pulled application %s', new Date().toISOString(), targetName));
-    },
     preHook: function preHook(cb) {
       if (!targetApp.prehook) return cb();
 
@@ -219,7 +213,7 @@ Worker.prototype.checkRequest = function checkRequest(targetApp, req) {
     }
     case 'bitbucket': {
       var tmp = JSON.parse(req.body);
-      var ip = targetApp.secret || '104.192.143.0/24';
+      var ip = targetApp.secret;
       var configured = ipaddr.parseCIDR(ip);
       var source = ipaddr.parse(req.ip);
 
