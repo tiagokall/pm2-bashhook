@@ -203,7 +203,7 @@ Worker.prototype.processRequest = function(req) {
           new Date().toISOString(),
           targetName
         );
-        console.error(err);
+        console.error("async error: " + err);
       }
     }
   );
