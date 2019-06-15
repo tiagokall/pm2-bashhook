@@ -140,6 +140,7 @@ Worker.prototype.processRequest = function(req) {
         targetApp.cwd = apps[0].pm_cwd
           ? apps[0].pm_cwd
           : apps[0].pm2_env.pm_cwd;
+        execOptions.cwd = targetApp.cwd;
         console.log(
           "[%s] Resolved cwd %s",
           new Date().toISOString(),
@@ -443,4 +444,7 @@ function reqToAppName(req) {
 function spawnAsExec(command, options, cb) {
   var child = spawn("eval", [command], options);
   child.on("close", cb);
+  child.on("error", function(error) {
+    console.error("CUST ERROR" + error);
+  });
 }
