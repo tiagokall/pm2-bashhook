@@ -141,11 +141,6 @@ Worker.prototype.processRequest = function(req) {
           ? apps[0].pm_cwd
           : apps[0].pm2_env.pm_cwd;
         execOptions.cwd = targetApp.cwd;
-        console.log(
-          "[%s] Resolved cwd %s",
-          new Date().toISOString(),
-          execOptions.cwd
-        );
         return cb();
       });
     },
@@ -443,9 +438,5 @@ function reqToAppName(req) {
  */
 function spawnAsExec(command, options, cb) {
   var child = spawn("eval", [command], options);
-  console.log("Spawn command " + command + " with cwd " + options.cwd);
-  child.on("error", function(error) {
-    console.error("CUST ERROR" + error);
-  });
   child.on("close", cb);
 }
