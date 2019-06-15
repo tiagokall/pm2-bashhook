@@ -127,11 +127,14 @@ Worker.prototype.processRequest = function(req) {
   var targetBranch = targetApp.targetBranch || "master";
 
   console.log(
-    "[%s] Received valid hook for app %s branch %s",
+    "[%s] Received valid hook for app %s (branch %s, allowed %s)",
     new Date().toISOString(),
     targetName,
-    branchName
+    branchName,
+    targetBranch
   );
+
+  console.log("SHOULD DO IT", branchName === targetBranch);
 
   var execOptions = {
     cwd: targetApp.cwd,

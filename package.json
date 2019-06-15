@@ -1,6 +1,6 @@
 {
   "name": "pm2-bashhook",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "receive http hook from multiple source and ask pm2 to reload the application for you",
   "main": "index.js",
   "scripts": {
